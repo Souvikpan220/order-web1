@@ -78,6 +78,13 @@ body{background:#f6f8fc;color:#0f172a}
   margin-top:14px;
 }
 
+/* 🔽 ADDED (DISABLED BUTTON STYLE) 🔽 */
+button:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+  transform:none !important;
+}
+
 .close-btn{margin-top:28px;padding:14px 38px;border-radius:16px;border:none;background:#0f172a;color:#fff;cursor:pointer}
 </style>
 </head>
@@ -124,8 +131,9 @@ body{background:#f6f8fc;color:#0f172a}
         <div class="step-title">Choose Payment Method</div>
 
         <div class="pay-options">
-          <button class="btn primary">🪙 Crypto</button>
-          <button class="btn secondary">🇮🇳 INR</button>
+          <!-- 🔽 ADDED disabled + ids 🔽 -->
+          <button class="btn primary" id="cryptoBtn" disabled>🪙 Crypto</button>
+          <button class="btn secondary" id="inrBtn" disabled>🇮🇳 INR</button>
         </div>
       </div>
       <!-- 🔼 END ADDITION 🔼 -->
@@ -172,21 +180,15 @@ const DATA = {
 
 let selectedService=null;
 let selectedServiceName="";
+let currentPlatform=""; // 🔽 ADDED
 
 function openPopup(platform){
+  currentPlatform = platform; // 🔽 ADDED
   overlay.style.display="flex";
   popup.style.display="block";
   popupTitle.innerText=DATA[platform].title;
   services.innerHTML="";
   orderBox.style.display="none";
-
-  Object.entries(DATA[platform].services).forEach(([name,info])=>{
-    const div=document.createElement("div");
-    div.className="service-card";
-    div.innerText=name;
-    div.onclick=()=>selectService(div,info,name);
-    services.appendChild(div);
-  });
 }
 
 function selectService(el,info,name){
@@ -227,6 +229,34 @@ qty.addEventListener("input",()=>{
 function closePopup(){
   overlay.style.display="none";
 }
+
+/* 🔽 ADDED PLATFORM-AWARE LINK VALIDATION 🔽 */
+const contentLinkInput = document.getElementById("contentLink");
+const cryptoBtn = document.getElementById("cryptoBtn");
+const inrBtn = document.getElementById("inrBtn");
+
+function isValidLinkForPlatform(link, platform){
+  if(!link) return false;
+  link = link.toLowerCase();
+
+  if(platform === "tiktok") return link.includes("tiktok.com/");
+  if(platform === "instagram") return link.includes("instagram.com/");
+  if(platform === "youtube") return link.includes("youtube.com/") || link.includes("youtu.be/");
+
+  return false;
+}
+
+contentLinkInput.addEventListener("input",()=>{
+  const link = contentLinkInput.value.trim();
+
+  if(isValidLinkForPlatform(link, currentPlatform)){
+    cryptoBtn.disabled = false;
+    inrBtn.disabled = false;
+  } else {
+    cryptoBtn.disabled = true;
+    inrBtn.disabled = true;
+  }
+});
 </script>
 
 </body>
