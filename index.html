@@ -24,18 +24,44 @@ body{background:#f6f8fc;color:#0f172a}
 
 /* POPUP */
 .popup-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;z-index:999}
-.popup{background:linear-gradient(135deg,#fff,#f1f5ff);padding:40px;border-radius:30px;width:90%;max-width:540px;text-align:center;box-shadow:0 40px 90px rgba(0,0,0,.25);display:none}
+.popup{background:#f8fbff;padding:40px;border-radius:32px;width:90%;max-width:520px;text-align:center;box-shadow:0 40px 90px rgba(0,0,0,.25);display:none}
 .popup h2{font-size:26px;margin-bottom:20px}
-.service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
-.service-card{padding:16px;border-radius:16px;background:#fff;font-weight:600;cursor:pointer;box-shadow:0 10px 25px rgba(0,0,0,.08);transition:.25s}
+
+.service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:25px}
+.service-card{padding:16px;border-radius:18px;background:#fff;font-weight:600;cursor:pointer;box-shadow:0 10px 25px rgba(0,0,0,.08);transition:.25s}
 .service-card:hover,.service-card.active{background:#2563eb;color:#fff;transform:translateY(-4px)}
 
-.order-box{margin-top:25px;display:none}
-.order-box input{width:100%;padding:14px;border-radius:14px;border:1px solid #cbd5f5;font-size:15px;margin-top:12px}
-.price{margin-top:14px;font-size:20px;font-weight:800}
-.note{margin-top:6px;font-size:13px;color:#64748b}
+.order-box{display:none}
+.order-box input{
+  width:100%;
+  padding:16px;
+  border-radius:18px;
+  border:2px solid #0f172a;
+  font-size:16px;
+  margin-top:10px;
+}
 
-.close-btn{margin-top:25px;padding:12px 34px;border-radius:14px;border:none;background:#0f172a;color:#fff;cursor:pointer}
+.min-text{
+  margin-top:12px;
+  font-size:14px;
+  color:#64748b;
+}
+
+.pay-label{
+  margin-top:18px;
+  font-size:14px;
+  color:#64748b;
+  display:none;
+}
+
+.price{
+  margin-top:6px;
+  font-size:22px;
+  font-weight:800;
+  display:none;
+}
+
+.close-btn{margin-top:28px;padding:14px 38px;border-radius:16px;border:none;background:#0f172a;color:#fff;cursor:pointer}
 </style>
 </head>
 
@@ -53,9 +79,8 @@ body{background:#f6f8fc;color:#0f172a}
   </div>
 </section>
 
-<!-- POPUPS -->
+<!-- POPUP -->
 <div class="popup-overlay" id="overlay">
-
   <div class="popup" id="popup">
     <h2 id="popupTitle"></h2>
 
@@ -63,22 +88,24 @@ body{background:#f6f8fc;color:#0f172a}
 
     <div class="order-box" id="orderBox">
       <input type="number" id="qty" placeholder="Enter quantity">
+
+      <div class="min-text" id="minText"></div>
+
+      <div class="pay-label" id="payLabel">Amount to be paid</div>
       <div class="price" id="price"></div>
-      <div class="note" id="note"></div>
     </div>
 
     <button class="close-btn" onclick="closePopup()">Close</button>
   </div>
-
 </div>
 
 <script>
 const RATE_INR = 100;
 
 const DATA = {
-  tiktok: {
-    title: "🎵 TikTok Services",
-    services: {
+  tiktok:{
+    title:"🎵 TikTok Services",
+    services:{
       Views:{price:0.2,min:100},
       Likes:{price:0.3,min:100},
       Followers:{price:1.1,min:50},
@@ -86,9 +113,9 @@ const DATA = {
       Comments:{price:1,min:50}
     }
   },
-  instagram: {
-    title: "📸 Instagram Services",
-    services: {
+  instagram:{
+    title:"📸 Instagram Services",
+    services:{
       Views:{price:0.12,min:200},
       Likes:{price:0.25,min:50},
       Comments:{price:0.5,min:50},
@@ -97,9 +124,9 @@ const DATA = {
       Reposts:{price:0.65,min:50}
     }
   },
-  youtube: {
-    title: "▶ YouTube Services",
-    services: {
+  youtube:{
+    title:"▶ YouTube Services",
+    services:{
       Subscribers:{price:25,min:500},
       Likes:{price:0.5,min:100},
       Views:{price:1,min:100}
@@ -107,52 +134,53 @@ const DATA = {
   }
 };
 
-let selectedService = null;
+let selectedService=null;
 
 function openPopup(platform){
-  document.getElementById("overlay").style.display="flex";
-  document.getElementById("popup").style.display="block";
-  document.getElementById("popupTitle").innerText = DATA[platform].title;
-
-  const servicesDiv = document.getElementById("services");
-  servicesDiv.innerHTML="";
-  document.getElementById("orderBox").style.display="none";
+  overlay.style.display="flex";
+  popup.style.display="block";
+  popupTitle.innerText=DATA[platform].title;
+  services.innerHTML="";
+  orderBox.style.display="none";
 
   Object.entries(DATA[platform].services).forEach(([name,info])=>{
     const div=document.createElement("div");
     div.className="service-card";
     div.innerText=name;
     div.onclick=()=>selectService(div,info);
-    servicesDiv.appendChild(div);
+    services.appendChild(div);
   });
 }
 
 function selectService(el,info){
   document.querySelectorAll(".service-card").forEach(c=>c.classList.remove("active"));
   el.classList.add("active");
-  selectedService = info;
 
-  document.getElementById("orderBox").style.display="block";
-  document.getElementById("qty").value="";
-  document.getElementById("price").innerText="";
-  document.getElementById("note").innerText=
-    `Min order: ${info.min} | $${info.price}/1000 (₹${info.price*RATE_INR}/1000)`;
+  selectedService=info;
+  orderBox.style.display="block";
+  qty.value="";
+  minText.innerText=`Min order: ${info.min}`;
+  price.style.display="none";
+  payLabel.style.display="none";
 }
 
-document.getElementById("qty").addEventListener("input",()=>{
+qty.addEventListener("input",()=>{
   if(!selectedService) return;
-  const q = Number(qty.value);
+  const q=Number(qty.value);
   if(q < selectedService.min){
-    price.innerText = "Below minimum order";
+    price.style.display="none";
+    payLabel.style.display="none";
     return;
   }
-  const usd = (q/1000)*selectedService.price;
-  const inr = usd*RATE_INR;
-  price.innerText = `$${usd.toFixed(2)}  |  ₹${inr.toFixed(0)}`;
+  const usd=(q/1000)*selectedService.price;
+  const inr=usd*RATE_INR;
+  payLabel.style.display="block";
+  price.style.display="block";
+  price.innerText=`$${usd.toFixed(2)} | ₹${inr.toFixed(0)}`;
 });
 
 function closePopup(){
-  document.getElementById("overlay").style.display="none";
+  overlay.style.display="none";
 }
 </script>
 
