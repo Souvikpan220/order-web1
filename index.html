@@ -266,6 +266,104 @@ contentLinkInput.addEventListener("input",()=>{
     inrBtn.disabled = true;
   }
 });
+
+cryptoBtn.addEventListener("click", async () => {
+  if (cryptoBtn.disabled) return;
+
+  // Extra safety check
+  const link = contentLinkInput.value.trim();
+  if (!isValidLinkForPlatform(link, currentPlatform)) return;
+
+  // Collect order data from existing state
+  const qtyVal = Number(qty.value);
+  const usdText = price.innerText.split("|")[0].replace("$","").trim();
+  const usdPrice = Number(usdText);
+
+  const orderPayload = {
+    platform: currentPlatform,
+    service: selectedServiceName,
+    quantity: qtyVal,
+    usdPrice: usdPrice,
+    coin: "DOGE" // default for now (we’ll add selector later)
+  };
+
+  cryptoBtn.innerText = "Processing...";
+  cryptoBtn.disabled = true;
+
+  try {
+    const res = await fetch("/api/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderPayload)
+    });
+
+    const data = await res.json();
+    if (!data.success) throw new Error("Order failed");
+
+    // Open payment window
+    const paymentWindow = window.open(
+      "",
+      "cryptoPayment",
+      "width=480,height=620"
+    );
+
+    paymentWindow.document.write(`
+      <html>
+      <head>
+        <title>Crypto Payment</title>
+        <style>
+          body{font-family:Inter,system-ui;padding:30px;background:#f6f8fc;color:#0f172a}
+          .box{background:#fff;padding:25px;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.15)}
+          h2{margin-bottom:10px}
+          code{word-break:break-all}
+          input{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;margin-top:10px}
+          button{margin-top:15px;padding:12px 20px;border-radius:14px;border:none;background:#2563eb;color:#fff;font-weight:600;cursor:pointer}
+        </style>
+      </head>
+      <body>
+        <div class="box">
+          <h2>🪙 Crypto Payment</h2>
+          <p><strong>Send EXACT amount:</strong></p>
+          <h3>${data.order.cryptoAmount} ${data.order.coin}</h3>
+
+          <p><strong>To address:</strong></p>
+          <code>${data.order.walletAddress}</code>
+
+          <p><strong>Order ID:</strong> ${data.order.orderId}</p>
+
+          <p>Paste TXID after payment:</p>
+          <input id="txid" placeholder="Transaction ID">
+
+          <button onclick="
+            fetch('/api/verify-payment',{
+              method:'POST',
+              headers:{'Content-Type':'application/json'},
+              body:JSON.stringify({
+                order:${JSON.stringify(data.order)},
+                txid:document.getElementById('txid').value
+              })
+            }).then(r=>r.json()).then(d=>{
+              if(d.success){
+                window.opener.location.href=d.redirect;
+                window.close();
+              }else{
+                alert('Payment not confirmed yet');
+              }
+            });
+          ">Confirm Payment</button>
+        </div>
+      </body>
+      </html>
+    `);
+
+  } catch (err) {
+    alert("Failed to create order");
+    cryptoBtn.disabled = false;
+    cryptoBtn.innerText = "🪙 Crypto";
+  }
+});
+
+
 </script>
 
 </body>
