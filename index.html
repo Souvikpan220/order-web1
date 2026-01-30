@@ -61,6 +61,23 @@ body{background:#f6f8fc;color:#0f172a}
   display:none;
 }
 
+/* 🔽 ADDED (NEXT STEP UI) 🔽 */
+.next-step{
+  margin-top:22px;
+  display:none;
+}
+.next-step .step-title{
+  margin-top:10px;
+  font-size:14px;
+  color:#64748b;
+}
+.next-step .pay-options{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  margin-top:14px;
+}
+
 .close-btn{margin-top:28px;padding:14px 38px;border-radius:16px;border:none;background:#0f172a;color:#fff;cursor:pointer}
 </style>
 </head>
@@ -93,6 +110,25 @@ body{background:#f6f8fc;color:#0f172a}
 
       <div class="pay-label" id="payLabel">Amount to be paid</div>
       <div class="price" id="price"></div>
+
+      <!-- 🔽 ADDED NEXT STEP 🔽 -->
+      <div class="next-step" id="nextStep">
+        <div class="step-title">Service Details</div>
+
+        <input type="text" id="contentLink" placeholder="Enter Reel / Video Link">
+
+        <input type="text" id="profileLink"
+               placeholder="Enter Profile Link (for followers/subscribers only)"
+               style="display:none;">
+
+        <div class="step-title">Choose Payment Method</div>
+
+        <div class="pay-options">
+          <button class="btn primary">🪙 Crypto</button>
+          <button class="btn secondary">🇮🇳 INR</button>
+        </div>
+      </div>
+      <!-- 🔼 END ADDITION 🔼 -->
     </div>
 
     <button class="close-btn" onclick="closePopup()">Close</button>
@@ -135,6 +171,7 @@ const DATA = {
 };
 
 let selectedService=null;
+let selectedServiceName="";
 
 function openPopup(platform){
   overlay.style.display="flex";
@@ -147,21 +184,27 @@ function openPopup(platform){
     const div=document.createElement("div");
     div.className="service-card";
     div.innerText=name;
-    div.onclick=()=>selectService(div,info);
+    div.onclick=()=>selectService(div,info,name);
     services.appendChild(div);
   });
 }
 
-function selectService(el,info){
+function selectService(el,info,name){
   document.querySelectorAll(".service-card").forEach(c=>c.classList.remove("active"));
   el.classList.add("active");
 
   selectedService=info;
+  selectedServiceName=name;
+
   orderBox.style.display="block";
   qty.value="";
   minText.innerText=`Min order: ${info.min}`;
   price.style.display="none";
   payLabel.style.display="none";
+  nextStep.style.display="none";
+
+  profileLink.style.display =
+    (name==="Followers" || name==="Subscribers") ? "block" : "none";
 }
 
 qty.addEventListener("input",()=>{
@@ -170,6 +213,7 @@ qty.addEventListener("input",()=>{
   if(q < selectedService.min){
     price.style.display="none";
     payLabel.style.display="none";
+    nextStep.style.display="none";
     return;
   }
   const usd=(q/1000)*selectedService.price;
@@ -177,6 +221,7 @@ qty.addEventListener("input",()=>{
   payLabel.style.display="block";
   price.style.display="block";
   price.innerText=`$${usd.toFixed(2)} | ₹${inr.toFixed(0)}`;
+  nextStep.style.display="block";
 });
 
 function closePopup(){
