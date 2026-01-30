@@ -6,257 +6,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ================= RESET ================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Inter", system-ui, sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
+body{background:#f6f8fc;color:#0f172a}
 
-/* ================= BODY ================= */
-body {
-  background: #f6f8fc;
-  color: #0f172a;
-  overflow-x: hidden;
-}
+/* HERO */
+.hero{min-height:100vh;text-align:center;padding:120px 20px;background:radial-gradient(circle at top,#e0ebff,#f6f8fc)}
+.badge{display:inline-block;padding:8px 18px;border-radius:999px;background:#eaf0ff;color:#2563eb;font-size:14px;margin-bottom:25px}
+.hero h1{font-size:56px;font-weight:800;line-height:1.15}
+.hero h1 span{color:#2563eb}
+.hero p{margin-top:20px;font-size:18px;color:#475569}
+.hero-buttons{margin-top:45px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
+.btn{padding:16px 30px;border-radius:18px;border:none;font-size:16px;font-weight:600;cursor:pointer;transition:.3s}
+.btn:hover{transform:translateY(-4px)}
+.primary{background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff}
+.secondary{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff}
+.premium{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
 
-/* ================= HERO ================= */
-.hero {
-  min-height: 100vh;
-  text-align: center;
-  padding: 120px 20px;
-  background: radial-gradient(circle at top, #e0ebff, #f6f8fc);
-}
+/* POPUP */
+.popup-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;z-index:999}
+.popup{background:linear-gradient(135deg,#fff,#f1f5ff);padding:40px;border-radius:30px;width:90%;max-width:540px;text-align:center;box-shadow:0 40px 90px rgba(0,0,0,.25);display:none}
+.popup h2{font-size:26px;margin-bottom:20px}
+.service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
+.service-card{padding:16px;border-radius:16px;background:#fff;font-weight:600;cursor:pointer;box-shadow:0 10px 25px rgba(0,0,0,.08);transition:.25s}
+.service-card:hover,.service-card.active{background:#2563eb;color:#fff;transform:translateY(-4px)}
 
-.badge {
-  display: inline-block;
-  padding: 8px 18px;
-  border-radius: 999px;
-  background: #eaf0ff;
-  color: #2563eb;
-  font-size: 14px;
-  margin-bottom: 25px;
-}
+.order-box{margin-top:25px;display:none}
+.order-box input{width:100%;padding:14px;border-radius:14px;border:1px solid #cbd5f5;font-size:15px;margin-top:12px}
+.price{margin-top:14px;font-size:20px;font-weight:800}
+.note{margin-top:6px;font-size:13px;color:#64748b}
 
-.hero h1 {
-  font-size: 56px;
-  font-weight: 800;
-  line-height: 1.15;
-}
-
-.hero h1 span {
-  color: #2563eb;
-}
-
-.hero p {
-  margin-top: 20px;
-  font-size: 18px;
-  color: #475569;
-}
-
-.hero-buttons {
-  margin-top: 45px;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 16px 30px;
-  border-radius: 18px;
-  border: none;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.btn:hover {
-  transform: translateY(-4px);
-}
-
-.primary {
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  color: white;
-}
-
-.secondary {
-  background: linear-gradient(135deg, #7c3aed, #5b21b6);
-  color: white;
-}
-
-.premium {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: white;
-}
-
-/* ================= PLACEHOLDER ================= */
-.shop-placeholder {
-  padding: 100px 20px;
-  text-align: center;
-}
-
-.shop-placeholder h2 {
-  font-size: 36px;
-  margin-bottom: 15px;
-}
-
-.shop-placeholder p {
-  color: #475569;
-}
-
-/* ================= WHY US ================= */
-.why-us {
-  background: white;
-  padding: 100px 20px;
-}
-
-.why-us h2 {
-  text-align: center;
-  font-size: 40px;
-  margin-bottom: 60px;
-}
-
-.features {
-  max-width: 1100px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 30px;
-}
-
-.feature-card {
-  background: #f8fafc;
-  padding: 30px;
-  border-radius: 22px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
-
-.feature-card h3 {
-  margin-bottom: 10px;
-}
-
-/* ================= TICKET ================= */
-.tickets {
-  padding: 100px 20px;
-  text-align: center;
-}
-
-.ticket-form {
-  max-width: 500px;
-  margin: 40px auto 0;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.ticket-form input,
-.ticket-form textarea {
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid #cbd5f5;
-  font-size: 15px;
-}
-
-.ticket-form button {
-  background: #2563eb;
-  color: white;
-  padding: 14px;
-  border-radius: 14px;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-/* ================= FOOTER ================= */
-footer {
-  background: #0f172a;
-  color: #cbd5f5;
-  padding: 30px;
-  text-align: center;
-}
-
-/* ================= POPUPS ================= */
-.popup-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(12px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.popup {
-  background: linear-gradient(135deg, #ffffff, #f1f5ff);
-  padding: 40px;
-  border-radius: 30px;
-  width: 90%;
-  max-width: 520px;
-  text-align: center;
-  box-shadow: 0 40px 90px rgba(0,0,0,0.25);
-  animation: popupIn 0.4s ease;
-  display: none;
-}
-
-@keyframes popupIn {
-  from { transform: scale(0.9) translateY(20px); opacity: 0; }
-  to { transform: scale(1) translateY(0); opacity: 1; }
-}
-
-.popup h2 {
-  font-size: 28px;
-  margin-bottom: 25px;
-}
-
-.service-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 18px;
-}
-
-.service-card {
-  padding: 18px;
-  border-radius: 18px;
-  background: white;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 12px 25px rgba(0,0,0,0.08);
-  transition: 0.25s;
-}
-
-.service-card:hover {
-  background: #2563eb;
-  color: white;
-  transform: translateY(-5px) scale(1.04);
-}
-
-.close-btn {
-  margin-top: 30px;
-  padding: 12px 34px;
-  border-radius: 14px;
-  border: none;
-  background: #0f172a;
-  color: white;
-  cursor: pointer;
-}
+.close-btn{margin-top:25px;padding:12px 34px;border-radius:14px;border:none;background:#0f172a;color:#fff;cursor:pointer}
 </style>
 </head>
 
 <body>
 
-<!-- ================= HERO ================= -->
 <section class="hero">
   <div class="badge">🎁 100% Free – No card required</div>
-
-  <h1>
-    Get & Earn <span>Followers</span> and <span>Views</span><br>
-    For Free
-  </h1>
-
+  <h1>Get & Earn <span>Followers</span> and <span>Views</span><br>For Free</h1>
   <p>Boost your social media presence with our free services !!</p>
 
   <div class="hero-buttons">
@@ -266,107 +53,106 @@ footer {
   </div>
 </section>
 
-<!-- ================= SHOP SPACE ================= -->
-<section class="shop-placeholder">
-  <h2>🛒 Shop Area</h2>
-  <p>Service selection, pricing & crypto payments will appear here.</p>
-</section>
+<!-- POPUPS -->
+<div class="popup-overlay" id="overlay">
 
-<!-- ================= WHY US ================= -->
-<section class="why-us">
-  <h2>Why Choose Us?</h2>
-  <div class="features">
-    <div class="feature-card">
-      <h3>⚡ Fast Delivery</h3>
-      <p>Quick processing with high quality engagement.</p>
+  <div class="popup" id="popup">
+    <h2 id="popupTitle"></h2>
+
+    <div class="service-grid" id="services"></div>
+
+    <div class="order-box" id="orderBox">
+      <input type="number" id="qty" placeholder="Enter quantity">
+      <div class="price" id="price"></div>
+      <div class="note" id="note"></div>
     </div>
-    <div class="feature-card">
-      <h3>🔐 Secure</h3>
-      <p>No passwords required. Privacy first.</p>
-    </div>
-    <div class="feature-card">
-      <h3>💸 Cheap Rates</h3>
-      <p>Services starting from just $0.10.</p>
-    </div>
-    <div class="feature-card">
-      <h3>📈 Scalable</h3>
-      <p>Perfect for creators and resellers.</p>
-    </div>
-  </div>
-</section>
 
-<!-- ================= TICKETS ================= -->
-<section class="tickets">
-  <h2>🎫 Support Ticket</h2>
-  <p>Need help? Create a ticket below.</p>
-
-  <form class="ticket-form">
-    <input type="email" placeholder="Your Email" required>
-    <input type="text" placeholder="Order ID (optional)">
-    <textarea placeholder="Describe your issue..." required></textarea>
-    <button type="submit">Submit Ticket</button>
-  </form>
-</section>
-
-<!-- ================= FOOTER ================= -->
-<footer>
-  © 2026 RapidReach.fun — All Rights Reserved
-</footer>
-
-<!-- ================= POPUPS ================= -->
-<div class="popup-overlay" id="popupOverlay">
-
-  <div class="popup" id="tiktokPopup">
-    <h2>🎵 TikTok Services</h2>
-    <div class="service-grid">
-      <div class="service-card">Views</div>
-      <div class="service-card">Likes</div>
-      <div class="service-card">Followers</div>
-      <div class="service-card">Shares</div>
-      <div class="service-card">Comments</div>
-    </div>
-    <button class="close-btn" onclick="closePopup()">Close</button>
-  </div>
-
-  <div class="popup" id="instagramPopup">
-    <h2>📸 Instagram Services</h2>
-    <div class="service-grid">
-      <div class="service-card">Views</div>
-      <div class="service-card">Likes</div>
-      <div class="service-card">Comments</div>
-      <div class="service-card">Followers</div>
-      <div class="service-card">Shares</div>
-      <div class="service-card">Reposts</div>
-    </div>
-    <button class="close-btn" onclick="closePopup()">Close</button>
-  </div>
-
-  <div class="popup" id="youtubePopup">
-    <h2>▶ YouTube Services</h2>
-    <div class="service-grid">
-      <div class="service-card">Subscribers</div>
-      <div class="service-card">Likes</div>
-      <div class="service-card">Views</div>
-    </div>
     <button class="close-btn" onclick="closePopup()">Close</button>
   </div>
 
 </div>
 
 <script>
-function openPopup(type) {
-  document.getElementById("popupOverlay").style.display = "flex";
-  document.getElementById("tiktokPopup").style.display = "none";
-  document.getElementById("instagramPopup").style.display = "none";
-  document.getElementById("youtubePopup").style.display = "none";
+const RATE_INR = 100;
 
-  if (type === "tiktok") document.getElementById("tiktokPopup").style.display = "block";
-  if (type === "instagram") document.getElementById("instagramPopup").style.display = "block";
-  if (type === "youtube") document.getElementById("youtubePopup").style.display = "block";
+const DATA = {
+  tiktok: {
+    title: "🎵 TikTok Services",
+    services: {
+      Views:{price:0.2,min:100},
+      Likes:{price:0.3,min:100},
+      Followers:{price:1.1,min:50},
+      Shares:{price:0.2,min:100},
+      Comments:{price:1,min:50}
+    }
+  },
+  instagram: {
+    title: "📸 Instagram Services",
+    services: {
+      Views:{price:0.12,min:200},
+      Likes:{price:0.25,min:50},
+      Comments:{price:0.5,min:50},
+      Followers:{price:0.8,min:100},
+      Shares:{price:0.2,min:100},
+      Reposts:{price:0.65,min:50}
+    }
+  },
+  youtube: {
+    title: "▶ YouTube Services",
+    services: {
+      Subscribers:{price:25,min:500},
+      Likes:{price:0.5,min:100},
+      Views:{price:1,min:100}
+    }
+  }
+};
+
+let selectedService = null;
+
+function openPopup(platform){
+  document.getElementById("overlay").style.display="flex";
+  document.getElementById("popup").style.display="block";
+  document.getElementById("popupTitle").innerText = DATA[platform].title;
+
+  const servicesDiv = document.getElementById("services");
+  servicesDiv.innerHTML="";
+  document.getElementById("orderBox").style.display="none";
+
+  Object.entries(DATA[platform].services).forEach(([name,info])=>{
+    const div=document.createElement("div");
+    div.className="service-card";
+    div.innerText=name;
+    div.onclick=()=>selectService(div,info);
+    servicesDiv.appendChild(div);
+  });
 }
 
-function closePopup() {
-  document.getElementById("popupOverlay").style.display = "none";
+function selectService(el,info){
+  document.querySelectorAll(".service-card").forEach(c=>c.classList.remove("active"));
+  el.classList.add("active");
+  selectedService = info;
+
+  document.getElementById("orderBox").style.display="block";
+  document.getElementById("qty").value="";
+  document.getElementById("price").innerText="";
+  document.getElementById("note").innerText=
+    `Min order: ${info.min} | $${info.price}/1000 (₹${info.price*RATE_INR}/1000)`;
+}
+
+document.getElementById("qty").addEventListener("input",()=>{
+  if(!selectedService) return;
+  const q = Number(qty.value);
+  if(q < selectedService.min){
+    price.innerText = "Below minimum order";
+    return;
+  }
+  const usd = (q/1000)*selectedService.price;
+  const inr = usd*RATE_INR;
+  price.innerText = `$${usd.toFixed(2)}  |  ₹${inr.toFixed(0)}`;
+});
+
+function closePopup(){
+  document.getElementById("overlay").style.display="none";
 }
 </script>
 
