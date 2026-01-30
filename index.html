@@ -183,12 +183,21 @@ let selectedServiceName="";
 let currentPlatform=""; // 🔽 ADDED
 
 function openPopup(platform){
-  currentPlatform = platform; // 🔽 ADDED
+  currentPlatform = platform;
   overlay.style.display="flex";
   popup.style.display="block";
   popupTitle.innerText=DATA[platform].title;
   services.innerHTML="";
   orderBox.style.display="none";
+
+  // ✅ RESTORED: service buttons rendering
+  Object.entries(DATA[platform].services).forEach(([name,info])=>{
+    const div=document.createElement("div");
+    div.className="service-card";
+    div.innerText=name;
+    div.onclick=()=>selectService(div,info,name);
+    services.appendChild(div);
+  });
 }
 
 function selectService(el,info,name){
